@@ -1,5 +1,4 @@
 import pygame,random
-from math import sqrt
 from pygame.locals import *
 xmax = 850    #ancho de la pantalla
 ymax = 600     #alto de la pantalla
@@ -31,15 +30,12 @@ def main():  #declaracion de colores
     black = (0,0,0)
     grey = (100,100,100)
     d = 30
-    tam = d //2 - 2
-    umbral = 2 * tam
-    n = 150
     colal= (random.randint(100,200),random.randint(100,200), random.randint(100,200))
 
     clock=pygame.time.Clock()
 
     particulas = []
-    for part in range(n):  #Cantidad de partículas
+    for part in range(100):  #Cantidad de partículas
         particulas.append( Particle(d*random.randint(0,xmax//d),d*random.randint(0,ymax//d)) ) #Ajuste de posicion inicial
      
     exitflag = False
@@ -52,18 +48,16 @@ def main():  #declaracion de colores
                     exitflag = True
 
         screen.fill(white)
+        loc= []
         for p in particulas:
             p.move(d,xmax,ymax)
-
-        for p in particulas:
+            ub = (p.x,p.y)
             col = colal
-            for otro in particulas:
-                if otro == p:
-                    continue
-                distancia = sqrt((p.x - otro.x)**2 + (p.y - otro.y)**2)
-                if distancia < umbral:
-                    col = black
-            pygame.draw.circle(screen, col, (p.x, p.y), tam)
+            if ub not in loc:
+                loc.append(ub)
+            else:
+                col = black
+            pygame.draw.circle(screen, col, (p.x, p.y), d //2 - 2)
 
         pygame.display.flip()
         clock.tick(8) #Ajuste del tiempo

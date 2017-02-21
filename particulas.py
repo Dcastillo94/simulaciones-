@@ -1,18 +1,18 @@
 import pygame,random
-from math import sqrt
 from pygame.locals import *
 xmax = 850    #ancho de la pantalla
 ymax = 600     #alto de la pantalla
 
 class Particle():
-    def __init__(self, iniciox, inicioy):
+    def __init__(self, iniciox, inicioy, col):
 
         self.x = iniciox
         self.y = inicioy
+        self.col = col
         self.sx = iniciox
         self.sy = inicioy
 
-    def move(self,d,mx,my):
+    def move(self):
 
         if self.y < 0:
 
@@ -25,23 +25,22 @@ class Particle():
         self.x+=random.randint(-10,10) #Valores permitidos en el eje X        
 
 def main():  #declaracion de colores
+
     pygame.init()
     screen = pygame.display.set_mode((xmax,ymax))
     white = (255,255,255) 
     black = (0,0,0)
     grey = (100,100,100)
-    d = 30
-    tam = d //2 - 2
-    umbral = 2 * tam
-    n = 150
-    colal= (random.randint(100,200),random.randint(100,200), random.randint(100,200))
 
     clock=pygame.time.Clock()
 
     particulas = []
-    for part in range(n):  #Cantidad de partículas
-        particulas.append( Particle(d*random.randint(0,xmax//d),d*random.randint(0,ymax//d)) ) #Ajuste de posicion inicial
-     
+    for part in range(10):  #Cantidad de partículas
+        colal= (random.randint(100,200),random.randint(100,200), random.randint(100,200))
+        particulas.append( Particle(random.randint(0,xmax),random.randint(0,ymax),colal) ) #Ajuste de posicion inicial
+
+
+        
     exitflag = False
     while not exitflag:
         for event in pygame.event.get():
@@ -53,21 +52,13 @@ def main():  #declaracion de colores
 
         screen.fill(white)
         for p in particulas:
-            p.move(d,xmax,ymax)
-
-        for p in particulas:
-            col = colal
-            for otro in particulas:
-                if otro == p:
-                    continue
-                distancia = sqrt((p.x - otro.x)**2 + (p.y - otro.y)**2)
-                if distancia < umbral:
-                    col = black
-            pygame.draw.circle(screen, col, (p.x, p.y), tam)
+            p.move()
+            pygame.draw.circle(screen, p.col, (p.x, p.y), 20)
 
         pygame.display.flip()
-        clock.tick(8) #Ajuste del tiempo
+        clock.tick(15) #Ajuste del tiempo
     pygame.quit()
 
 if __name__ == "__main__":
+
     main()
